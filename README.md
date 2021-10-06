@@ -12,10 +12,10 @@ print(umbrella.get_activity())
 </pre>
 
 # Default Behaviour
-api url defaults to: https://reports.api.umbrella.com/v2/organizarions
-limit default to 300
-from timestamp default to UTC midnight from the current day
-authentication url defaults to https://management.api.umbrella.com/v2/oauth2/token
+- api url defaults to: https://reports.api.umbrella.com/v2/organizarions
+- limit default to 300
+- from timestamp default to UTC midnight from the current day
+- authentication url defaults to https://management.api.umbrella.com/v2/oauth2/token
 
 # Currently implemented functions
 Functions implemented in the class should mirror this documentation and naming as close as possible
