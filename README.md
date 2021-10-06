@@ -21,11 +21,11 @@ authentication url defaults to https://management.api.umbrella.com/v2/oauth2/tok
 Functions implemented in the class should mirror this documentation and naming as close as possible
 https://developer.cisco.com/docs/cloud-security/#!reporting-v2-endpoints
 
-umbrella.get_categories() - Returns a dataclass with the categories structured in different ways
-umbrella.get_activity() - Function to get various activities. All parameters except to, from, and offset and limit can be passed to the function
-umbrella.get_top_identities() - Function to get "Top" identities
-umbrella.get_top_destinations() - Function to get "Top" destinations
-umbrella.get_security_activity() - Function to get activity that has "security" as a category. If you want to query the categories defined in your installation. Use the get_categories functiond and look at "type_list" within the returned object. 
+- umbrella.get_categories() - Returns a dataclass with the categories structured in different ways
+- umbrella.get_activity() - Function to get various activities. All parameters except to, from, and offset and limit can be passed to the function
+- umbrella.get_top_identities() - Function to get "Top" identities
+- umbrella.get_top_destinations() - Function to get "Top" destinations
+- umbrella.get_security_activity() - Function to get activity that has "security" as a category. If you want to query the categories defined in your installation. Use the get_categories functiond and look at "type_list" within the returned object. 
 
 
 # Current limitations
