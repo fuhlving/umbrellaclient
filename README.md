@@ -3,13 +3,13 @@
 Python class to make it easier to interact with the Umbrella Reporting API (v2). This is not written by a programmer, so use it at your own risk!
 
 # Usage
-
+<pre>
 from umbrella_client import UmbrellaClient
 
 umbrella = Umbrella.Client(integration_key="some_key", secret_key="more_sensitive_key", organizationid="1234567")
 
 print(umbrella.get_activity())
-
+</pre>
 
 # Default Behaviour
 api url defaults to: https://reports.api.umbrella.com/v2/organizarions
