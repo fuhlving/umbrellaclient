@@ -6,7 +6,7 @@ Python class to make it easier to interact with the Umbrella Reporting API (v2).
 <pre>
 from umbrella_client import UmbrellaClient
 
-umbrella = Umbrella.Client(integration_key="some_key", secret_key="more_sensitive_key", organizationid="1234567")
+umbrella = UmbrellaClient(integration_key="some_key", secret_key="more_sensitive_key", organizationid="1234567")
 
 print(umbrella.get_activity())
 </pre>
