@@ -56,7 +56,7 @@ class UmbrellaClient:
 		'''
 		The umbrella API tends to redirect (HTTP 302) the request. So we will check if the domain is the same. 
 
-		We tell requests that we do not allow redirects so we can run logic against is_redirect and is_permant_redirect 
+		We tell requests that we do not allow redirects so we can run logic against is_redirect and is_permanent_redirect 
 
 		If you plan to use this in production, you may want to consider if this check is secure enough.
 		'''
@@ -115,7 +115,7 @@ class UmbrellaClient:
 		if not type:
 			url = f"{self.hostname}/{self.organizationid}/activity?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 		elif type.lower() in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/activity/{type.lower()}?from={timestamp}&to=now&limit={self.limit}"
+			url = f"{self.hostname}/{self.organizationid}/activity/{type.lower()}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 		else:
 			raise Exception(f"{type} not a valid activity type: Valid types: {','.join(self.valid_types)}")
 		
@@ -123,13 +123,30 @@ class UmbrellaClient:
 
 		return data
 
-	def get_top_identities(self, timestamp=None, type=None):
+	def get_top_identities(self, timestamp=None, type=None, **kwargs):
 		timestamp = self.timestamp(timestamp)
 
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", "ports", 
+		"identityids", "identitytypes", "applicationid", "verdict", 
+		"securityoverridden", "bundleid", "threats", "threattypes", 
+		"ampdisposition", "antivirusthreats", "datalosspreventionstate", 
+		"filternoisydomains"
+		]
+
+		parameters = []
+
+		for key, value in kwargs.items():
+			if key in valid_parameters:
+				parameters.append(f"{key}={value}")
+		
+		if parameters:
+			parameters.insert(0, "")
+
 		if not type:
-			url = f"{self.hostname}/{self.organizationid}/top-identities?from={timestamp}&to=now&limit={self.limit}&offset=0"
+			url = f"{self.hostname}/{self.organizationid}/top-identities?from={timestamp}&to=now&limit={self.limit}&offset=0{'&'.join(parameters)}"
 		elif type.lower() in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/top-identities/{type.lower()}?from={timestamp}&to=now&limit={self.limit}&offset=0"
+			url = f"{self.hostname}/{self.organizationid}/top-identities/{type.lower()}?from={timestamp}&to=now&limit={self.limit}&offset=0{'&'.join(parameters)}"
 		else:
 			raise Exception(f"{type} not a valid identity type: Valid types: {','.join(self.valid_types)}")
 
@@ -137,18 +154,69 @@ class UmbrellaClient:
 
 		return data
 
-	def get_top_destinations(self, timestamp=None, destination_type=None):
+	def get_top_destinations(self, timestamp=None, destination_type=None, **kwargs):
 		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", "ports", 
+		"identityids", "identitytypes", "applicationid", "verdict", "sha256", 
+		"securityoverridden", "bundleid", "threats", "threattypes", 
+		"ampdisposition", "antivirusthreats", "datalosspreventionstate", 
+		"filternoisydomains"
+		]
+
+		parameters = []
+
+		for key, value in kwargs.items():
+			if key in valid_parameters:
+				parameters.append(f"{key}={value}")
+
+		if parameters:
+			parameters.insert(0, "")
+
 		if not destination_type:
 			raise Exception(f"Identity type is required for this function")
 		elif destination_type in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/top-destinations/{destination_type.lower()}?from={timestamp}&to=now&limit={self.limit}&offset=0"
+			url = f"{self.hostname}/{self.organizationid}/top-destinations/{destination_type.lower()}?from={timestamp}&to=now&limit={self.limit}&offset=0{'&'.join(parameters)}"
 		else:
 			raise Exception(f"{destination_type} is not a valid destination type. Valid types: {','.join(self.valid_types)}")
 
 		data = self.send_request(url)
 
 		return data
+
+	def get_top_categories(self, timestamp=None, type=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policyCategories", "ip", 
+		"identityIds", "identityTypes", "applicationId", "verdict", 
+		"sha256", "securityOverridden", "bundleId", "threats", 
+		"threatTypes", "ampDisposition", "antivirusThreats", 
+		"dataLossPreventionState", "filterNoisyDomains"
+		]
+
+		parameters = []
+
+		for key, value in kwargs.items():
+			if key in valid_parameters:
+				parameters.append(f"{key}={value}")
+
+		if parameters: 
+			parameters.insert(0, "")
+
+		if not type:
+			url = f"{self.hostname}/{self.organizationid}/top-categories?from={timestamp}&to=now&limit={self.limit}&offset=0{'&'.join(parameters)}"
+		elif type in self.valid_types:
+			url = f"{self.hostname}/{self.organizationid}/top-categories/{type.lower()}?from={timestamp}&to=now&limit={self.limit}&offset=0{'&'.join(parameters)}"
+		else:
+			raise Exception(f"{type} not a valid type. Valid types: {','.join(self.valid_types)}")
+
+		data = self.send_request(url)
+
+		return data
+
+
 
 	def get_security_activity(self, timestamp=None):
 		'''
@@ -160,10 +228,8 @@ class UmbrellaClient:
 		
 		for i in categories.category_by_type["security"]:
 			security_categories.append(str(i["id"]))
-
-		url = f"{self.hostname}/{self.organizationid}/activity?from={timestamp}&to=now&limit={self.limit}&categories={','.join(security_categories)}"
-		
-		data = self.send_request(url)
+	
+		data = self.get_activity(timestamp=timestamp, categories=','.join(security_categories))
 
 		return data
 
