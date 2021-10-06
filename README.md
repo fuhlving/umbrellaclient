@@ -26,7 +26,7 @@ https://developer.cisco.com/docs/cloud-security/#!reporting-v2-endpoints
 - umbrella.get_top_identities() - Function to get "Top" identities
 - umbrella.get_top_destinations() - Function to get "Top" destinations
 - umbrella.get_security_activity() - Function to get activity that has "security" as a category. If you want to query the categories defined in your installation. Use the get_categories functiond and look at "type_list" within the returned object. 
-
+- umbrella.get_top_categories() - Function to grab the top categories.
 
 # Current limitations
 - Authentication token is only created when the class is called. No logic implemented to check if the current token is valid and refresh it
