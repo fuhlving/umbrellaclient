@@ -41,15 +41,37 @@ umbrella.get_top_destinations(domains="google.com,bing.com")
 </pre>
 https://developer.cisco.com/docs/cloud-security/#!reporting-v2-endpoints
 
-- umbrella.get_activity() - Function to get various activities. All parameters except to, from, and offset and limit can be passed to the function
-- umbrella.get_top_identities() - Function to get "Top" identities
-- umbrella.get_top_destinations() - Function to get "Top" destinations
-- umbrella.get_security_activity() - Function to get activity that has "security" as a category. If you want to query the categories defined in your installation. Use the get_categories functiond and look at "type_list" within the returned object. 
-- umbrella.get_top_categories() - Function to grab the top categories.
-- umbrella.get_top_dns_query_types() - Function to grab the top DNS query types.
+These functions are currently implemented. Refer to the API documentation to see what they do
+
+- umbrella.get_activity() 
+- umbrella.get_top_identities() 
+- umbrella.get_top_destinations() 
+- umbrella.get_top_categories()
+- umbrella.get_top_dns_query_types() 
+- umbrella.get_organization_requests_by_hour()
+- umbrella.get_organization_requests_by_hour_and_category()
+- umbrella.get_depolyment_status()
+- umbrella.get_bandwidth_by_hour()
+- umbrella.get_bandwidth_by_timerange()
+- umbrella.get_top_files()
+- umbrella.get_total_requests()
+- umbrella.get_top_threats()
+- umbrella.get_top_threat_types()
+- umbrella.get_top_ips()
+- umbrella.get_summary()
+- umbrella.get_summaries_by_category()
+- umbrella.get_summaries_by_destination()
 
 Utility functions
+
+***Still working on these***
+
 - umbrella.get_categories() - Returns a dataclass with the categories structured in different ways
+
+Other functions
+- umbrella.get_security_activity() - Grabs events in the "security" category and displays them
+
+I have not been able to test all that all of the functions return the correct data as the umbrella portal that I have access to does not use all the umbrella features and thus the data is missing
 
 # Current limitations
 - Authentication token is only created when the class is called. No logic implemented to check if the current token is valid and refresh it
