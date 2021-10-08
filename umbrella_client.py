@@ -262,7 +262,7 @@ class UmbrellaClient:
 
 		return data
 
-	def organization_requests_by_hour_and_category(self, timestamp=None, type=None, **kwargs):
+	def get_organization_requests_by_hour_and_category(self, timestamp=None, type=None, **kwargs):
 		timestamp = self.timestamp(timestamp)
 
 		valid_parameters = [
