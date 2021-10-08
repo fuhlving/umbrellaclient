@@ -76,11 +76,9 @@ class UmbrellaClient:
 
 	def validate_parameters(self, valid_parameters_list=[], parameters_list=[]):
 		'''
-		Functions used to validate the kwargs from the other functions. The valid list is stored within the function 
+		Function used to validate the kwargs from the other functions. The valid list is stored within the function 
 		itself, and this function expects a list of valid parameters and the kwargs to be passed.
 		'''
-
-
 		parameters = []
 
 		for key, value in parameters_list.items():
@@ -237,6 +235,261 @@ class UmbrellaClient:
 		parameters = self.validate_parameters(valid_parameters, kwargs)
 
 		url = f"{self.hostname}/{self.organizationid}/top-dns-query-types?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_organization_requests_by_hour(self, timestamp=None, type=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", 
+		"ports", "identityids", "identitytypes", "applicationid", 
+		"verdict", "sha256", "securityoverridden", "bundleid", "threats", 
+		"threattypes", "ampdisposition", "antivirusthreats", 
+		"datalosspreventionstate", "filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		if type in self.valid_types:
+			url = f"{self.hostname}/{self.organizationid}/requests-by-hour/{type}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+		else:
+			url = f"{self.hostname}/{self.organizationid}/requests-by-hour?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def organization_requests_by_hour_and_category(self, timestamp=None, type=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", 
+		"ports", "identityids", "identitytypes", "applicationid", 
+		"verdict", "sha256", "securityoverridden", "bundleid", 
+		"threats", "threattypes", "ampdisposition", 
+		"antivirusthreats", "datalosspreventionstate", 
+		"filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		if type in self.valid_types:
+			url = f"{self.hostname}/{self.organizationid}/categories-by-timerange/{type}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+		else:
+			url = f"{self.hostname}/{self.organizationid}/categories-by-timerange?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_depolyment_status(self, timestamp=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = ["threats", "threattypes"]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		url = f"{self.hostname}/{self.organizationid}/deployment-status?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_bandwidth_by_hour(self, timestamp=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", 
+		"identityids", "identitytypes", "applicationid", "verdict", 
+		"sha256", "securityoverridden", "bundleid", "ampdisposition", 
+		"antivirusthreats", "datalosspreventionstate", "filternoisydomains",
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		url = f"{self.hostname}/{self.organizationid}/bandwidth-by-hour?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_bandwidth_by_timerange(self, timestamp=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", "identityids", 
+		"identitytypes", "applicationid", "verdict", "sha256", 
+		"securityoverridden", "bundleid", "ampdisposition", "antivirusthreats", 
+		"timerange", "datalosspreventionstate", "filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		url = f"{self.hostname}/{self.organizationid}/bandwidth-by-timerange?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_top_files(self, timestamp=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", "identityids", 
+		"identitytypes", "applicationid", "verdict", "sha256", 
+		"securityoverridden", "bundleid", "ampdisposition", "antivirusthreats", 
+		"datalosspreventionstate", "filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		url = f"{self.hostname}/{self.organizationid}/top-files?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_total_requests(self, timestamp=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", "ports", 
+		"identityids", "identitytypes", "applicationid", "verdict", "ruleid", 
+		"sha256", "securityoverridden", "bundleid", "threats", "threattypesp", 
+		"ampdisposition", "antivirusthreats", "datalosspreventionstate", 
+		"filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		url = f"{self.hostname}/{self.organizationid}/total-requests?from={timestamp}&to=now{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_top_threats(self, timestamp=None, type=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "categories", "policyCategories", "ip", "identityids", 
+		"identitytypes", "applicationid", "verdict", "threats", 
+		"threattypes", "filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		if type in self.valid_types:
+			url = f"{self.hostname}/{self.organizationid}/top-threats/{type}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+		else:
+			url = f"{self.hostname}/{self.organizationid}/top-threats?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_top_threat_types(self, timestamp=None, type=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "categories", "policyCategories", "ip", "identityids", 
+		"identitytypes", "applicationid", "verdict", "threats", 
+		"threattypes", "filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		if type in self.valid_types:
+			url = f"{self.hostname}/{self.organizationid}/top-threat-types/{type}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+		else:
+			url = f"{self.hostname}/{self.organizationid}/top-threat-types?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_top_ips(self, timestamp=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "categories", "policycategories", "ip", "identityids", 
+		"identitytypes", "applicationid", "verdict", "threats", 
+		"threattypes", "filternoisynomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		url = f"{self.hostname}/{self.organizationid}/top-ips?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_summary(self, timestamp=None, type=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", "ports",
+		"identityids", "identitytypes", "applicationid", "verdict", "ruleid",
+		"filename", "securityoverridden", "bundleid", "threats", "threattypes",
+		"ampdisposition", "antivirusthreats", "datalosspreventionstate",
+		"filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		if type in self.valid_types:
+			url = f"{self.hostname}/{self.organizationid}/summary/{type}?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
+		else:
+			url = f"{self.hostname}/{self.organizationid}/summary?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+
+	def get_summaries_by_category(self, timestamp=None, type=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", 
+		"identityids", "identitytypes", "applicationid", "verdict", 
+		"ruleid", "filename", "securityoverridden", "bundleid", "threats", 
+		"threattypes", "ampdisposition", "antivirusthreats", 
+		"datalosspreventionstate", "filternoisydomains"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		if type in self.valid_types:
+			url = f"{self.hostname}/{self.organizationid}/summaries-by-category/{type}?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
+		else:
+			url = f"{self.hostname}/{self.organizationid}/summaries-by-category?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
+
+		data = self.send_request(url)
+
+		return data
+
+	def get_summaries_by_category(self, timestamp=None, type=None, **kwargs):
+		timestamp = self.timestamp(timestamp)
+
+		valid_parameters = [
+		"domains", "urls", "categories", "policycategories", "ip", 
+		"identityids", "identitytypes", "applicationid", "verdict", 
+		"ruleid", "filename", "securityoverridden", "bundleid", "threats", 
+		"threattypes", "ampdisposition", "antivirusthreats", 
+		"datalosspreventionstate", "filternoisydomain"
+		]
+
+		parameters = self.validate_parameters(valid_parameters, kwargs)
+
+		if type in self.valid_types:
+			url = f"{self.hostname}/{self.organizationid}/summaries-by-destination/{type}?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
+		else:
+			url = f"{self.hostname}/{self.organizationid}/summaries-by-destination?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
 
 		data = self.send_request(url)
 
