@@ -473,7 +473,7 @@ class UmbrellaClient:
 
 		return data
 
-	def get_summaries_by_category(self, timestamp=None, type=None, **kwargs):
+	def get_summaries_by_destination(self, timestamp=None, type=None, **kwargs):
 		timestamp = self.timestamp(timestamp)
 
 		valid_parameters = [
