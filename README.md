@@ -74,6 +74,5 @@ Other functions
 I have not been able to test all that all of the functions return the correct data as the umbrella portal that I have access to does not use all the umbrella features and thus the data is missing
 
 # Current limitations
-- Authentication token is only created when the class is called. No logic implemented to check if the current token is valid and refresh it
 - "to" timestamp is currently hard-coded to "now". So no support to change this without changing the class (for now)
 - Offset is hard coded to 0. No support to retrive more eventes by manipulating the offset

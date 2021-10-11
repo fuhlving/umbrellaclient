@@ -3,18 +3,19 @@ from dataclasses import dataclass
 import requests
 
 class UmbrellaClient:
-	def __init__(self,integration_key,secret_key,organizationid,hostname="https://reports.api.umbrella.com/v2/organizations",limit=300):
+	def __init__(self, integration_key, secret_key, organizationid, hostname="https://reports.api.umbrella.com/v2/organizations", limit=300):
+		self.limit = limit
 		self.hostname = hostname
-		self.integration_key = integration_key
 		self.secret_key = secret_key
 		self.organizationid = organizationid
-		self.limit = limit
-
+		self.integration_key = integration_key
+		
 		self.valid_types = ["dns", "proxy", "firewall", "ip", "amp-retrospective"]
 
+		self.token_validity_time = 0
 		self.token = self.authenticate()
 		if not self.token:
-			raise Exception(f"Could not obtain authentication token")
+			raise Exception(f"Could not obtain authentication token")	
 
 	def timestamp(self, timestamp=None):
 		if timestamp:
@@ -31,8 +32,6 @@ class UmbrellaClient:
 
 		Function will be used by init, and store the dictionary as self.token.
 
-		TODO: implement logic to handle the validity time of the token
-
 		https://developer.cisco.com/docs/cloud-security/#!reporting-v2-getting-started/create-api-access-token
 		'''
 		r = requests.post(url, timeout=30, auth=requests.auth.HTTPBasicAuth(self.integration_key, self.secret_key))
@@ -42,6 +41,8 @@ class UmbrellaClient:
 				"Authorization": f"Bearer {token}",
 				"Content-Type": "application/json"
 			}
+			now = datetime.timestamp(datetime.now()).__int__()
+			self.token_validity_time = now + r.json()["expires_in"]
 			return (auth_header)
 		else:
 			return False
@@ -50,6 +51,10 @@ class UmbrellaClient:
 		'''
 		Main function for interacting with the API
 		'''
+		now = datetime.timestamp(datetime.now()).__int__()
+		if now >= self.token_validity_time:
+			self.token = self.authenticate()
+
 		r = requests.get(f"{url}", timeout=30, allow_redirects=False, headers=self.token)
 		if not r.ok:
 			raise Exception(f"Could not connect to {url}. {r.json()}")
@@ -254,7 +259,7 @@ class UmbrellaClient:
 		parameters = self.validate_parameters(valid_parameters, kwargs)
 
 		if type in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/requests-by-hour/{type}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+			url = f"{self.hostname}/{self.organizationid}/requests-by-hour/{type.lower()}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 		else:
 			url = f"{self.hostname}/{self.organizationid}/requests-by-hour?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 
@@ -277,7 +282,7 @@ class UmbrellaClient:
 		parameters = self.validate_parameters(valid_parameters, kwargs)
 
 		if type in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/categories-by-timerange/{type}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+			url = f"{self.hostname}/{self.organizationid}/categories-by-timerange/{type.lower()}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 		else:
 			url = f"{self.hostname}/{self.organizationid}/categories-by-timerange?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 
@@ -383,7 +388,7 @@ class UmbrellaClient:
 		parameters = self.validate_parameters(valid_parameters, kwargs)
 
 		if type in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/top-threats/{type}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+			url = f"{self.hostname}/{self.organizationid}/top-threats/{type.lower()}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 		else:
 			url = f"{self.hostname}/{self.organizationid}/top-threats?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 
@@ -403,7 +408,7 @@ class UmbrellaClient:
 		parameters = self.validate_parameters(valid_parameters, kwargs)
 
 		if type in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/top-threat-types/{type}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
+			url = f"{self.hostname}/{self.organizationid}/top-threat-types/{type.lower()}?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 		else:
 			url = f"{self.hostname}/{self.organizationid}/top-threat-types?from={timestamp}&to=now&limit={self.limit}{'&'.join(parameters)}"
 
@@ -442,7 +447,7 @@ class UmbrellaClient:
 		parameters = self.validate_parameters(valid_parameters, kwargs)
 
 		if type in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/summary/{type}?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
+			url = f"{self.hostname}/{self.organizationid}/summary/{type.lower()}?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
 		else:
 			url = f"{self.hostname}/{self.organizationid}/summary?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
 
@@ -465,7 +470,7 @@ class UmbrellaClient:
 		parameters = self.validate_parameters(valid_parameters, kwargs)
 
 		if type in self.valid_types:
-			url = f"{self.hostname}/{self.organizationid}/summaries-by-category/{type}?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
+			url = f"{self.hostname}/{self.organizationid}/summaries-by-category/{type.lower()}?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
 		else:
 			url = f"{self.hostname}/{self.organizationid}/summaries-by-category?from={timestamp}&to=now&offset=0&limit={self.limit}{'&'.join(parameters)}"
 
