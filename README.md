@@ -1,6 +1,6 @@
-# Umbrella Client
+# Cisco Umbrella Client
 
-Python class to make it easier to interact with the Umbrella Reporting API (v2). This is not written by a programmer, so use it at your own risk!
+Python class to make it easier to interact with the Cisco Umbrella Reporting API (v2). This is not written by a programmer, so use it at your own risk!
 
 The class/client is a work in progress. So be careful in pulling down new versions. I will try to not break old behaviour too much, but cant guarantee anything
 
