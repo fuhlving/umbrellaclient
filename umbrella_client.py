@@ -76,7 +76,7 @@ class UmbrellaClient:
 
 			if not r.ok:
 				raise Exception(f"Error in connecting to re-directed url {r.url}. {r.json()}")
-
+				
 		return (r.json())
 
 	def validate_parameters(self, valid_parameters_list=[], parameters_list=[]):
@@ -100,7 +100,7 @@ class UmbrellaClient:
 		'''
 		Function to get the current categories from umbrella. 
 		This can later be used as a parameter in the get_something functions
-		'''
+		'''	
 		r = self.send_request(f"{self.hostname}/{self.organizationid}/categories")
 		
 		data = UmbrellaCategories(r)
@@ -523,7 +523,13 @@ class UmbrellaCategories:
 	category_by_type = dict = {}
 	category_by_id = dict = {}
 	category_by_legacy_id = dict = {}
-	def __init__(self,data):
+
+	def __init__(self,data=""):
+		if data:
+			self.populate_data(data)
+
+	def populate_data(self, data):
+		self.clear_cata()
 		for i in data["data"]:
 			if not i["type"] in self.type_list:
 				self.type_list.append(i["type"])
@@ -533,3 +539,9 @@ class UmbrellaCategories:
 				self.category_by_type[i["type"]] = []
 			else:
 				self.category_by_type[i["type"]].append(i)
+
+	def clear_cata(self):
+		self.type_list = []
+		self.category_by_id = {}
+		self.category_by_legacy_id = {}
+		self.category_by_type = {}
